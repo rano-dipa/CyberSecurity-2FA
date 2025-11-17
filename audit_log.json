@@ -1,0 +1,31 @@
+[
+    {
+        "user": "testuser",
+        "ip": "127.0.0.1",
+        "risk_score": 30,
+        "reasons": [
+            "Unfamiliar IP address"
+        ],
+        "timestamp": "2025-11-16 22:08:52.116967"
+    },
+    {
+        "user": "testuser",
+        "ip": "172.18.91.252",
+        "risk_score": 40,
+        "reasons": [
+            "Unfamiliar IP address",
+            "Login at unusual hours"
+        ],
+        "timestamp": "2025-11-17 00:44:02.750020"
+    },
+    {
+        "user": "testuser",
+        "ip": "172.18.91.252",
+        "risk_score": 40,
+        "reasons": [
+            "Unfamiliar IP address",
+            "Login at unusual hours"
+        ],
+        "timestamp": "2025-11-17 00:47:54.779183"
+    }
+]

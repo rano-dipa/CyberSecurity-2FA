@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Login</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+            background: #fafafa;
+            padding-top: 50px;
+        }
+        #qr-box {
+            margin: auto;
+            background: white;
+            width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<h2>Additional Verification Required</h2>
+<p>Scan this QR code with your mobile device to approve the login.</p>
+
+<div id="qr-box">
+    <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+</div>
+
+<p>Waiting for approval...</p>
+
+<script>
+    function checkStatus() {
+        fetch(`/check_status/{{ token }}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "verified") {
+                    window.location.href = "/dashboard/{{ token }}";
+                }
+            });
+    }
+
+    setInterval(checkStatus, 3000);
+</script>
+
+</body>
+</html>
