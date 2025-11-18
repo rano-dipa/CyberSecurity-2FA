@@ -8,6 +8,7 @@ import os
 import secrets
 import datetime
 import base64
+import requests
 
 KNOWN_LOC_FILE = 'known_locations.json'
 SESSION_FILE = 'session_store.json'
@@ -32,6 +33,11 @@ def load_json(path, default):
     with open(path, 'r') as f:
         return json.load(f)
 
+def get_public_ip():
+    try:
+        return requests.get("https://api64.ipify.org").text
+    except:
+        return None
 
 def save_json(path, data):
     with open(path, 'w') as f:
@@ -80,12 +86,18 @@ def save_attempts(attempts):
 
 def add_audit_entry(username, ip, score, reasons):
     logs = load_audit()
+    geo = get_geo(ip)
     logs.append({
         "user": username,
         "ip": ip,
         "risk_score": score,
         "reasons": reasons,
-        "timestamp": str(datetime.datetime.now())
+        "timestamp": str(datetime.datetime.now()),
+        "country": geo.get("country"),
+        "city": geo.get("city"),
+        "isp": geo.get("isp"),
+        "lat": geo.get("lat"),
+        "lon": geo.get("lon")
     })
     save_audit(logs)
 
@@ -119,7 +131,7 @@ def signup():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-    ip_address = request.remote_addr
+    ip_address = get_public_ip() or request.remote_addr
     user_agent = request.headers.get('User-Agent')
 
     users = load_users()
@@ -200,6 +212,10 @@ def check_status(token):
         return {"status": "verified"}
     return {"status": "pending"}
 
+@app.route('/admin')
+def admin_dashboard():
+    logs = load_audit()   # use your existing audit loading function
+    return render_template("admin.html", logs=logs)
 
 @app.route('/approve/<token>')
 def approve(token):
@@ -233,7 +249,10 @@ def approve(token):
             "ip": user_ip,
             "country": geo["country"],
             "city": geo["city"],
-            "isp": geo["isp"]
+            "isp": geo["isp"],
+            "lat": geo["lat"],
+            "lon": geo["lon"],
+            "timestamp": str(datetime.datetime.now())
         })
 
     save_known_locations(known_locations)

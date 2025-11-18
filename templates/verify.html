@@ -3,21 +3,48 @@
 <head>
     <title>Verify Login</title>
     <style>
-        body {
-            text-align: center;
-            font-family: Arial;
-            background: #fafafa;
-            padding-top: 50px;
-        }
-        #qr-box {
-            margin: auto;
-            background: white;
-            width: 300px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-        }
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        background: #fafafa;
+        margin: 0;
+        padding-top: 40px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;      /* CENTER EVERYTHING */
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    #qr-box {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.12);
+
+        display: flex;
+        justify-content: center;   /* CENTER QR INSIDE BOX */
+        align-items: center;       /* VERTICAL CENTER */
+        width: 320px;              /* MATCHING QR SIZE */
+        height: auto;
+        margin-top: 20px;
+    }
+
+    img {
+        width: 260px;
+        height: 260px;
+    }
+
+    .waiting {
+        margin-top: 18px;
+        font-size: 14px;
+        color: #555;
+    }
     </style>
+
 </head>
 <body>
 

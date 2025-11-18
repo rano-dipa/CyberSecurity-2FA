@@ -14,19 +14,24 @@ def get_geo(ip):
             return {
                 "country": None,
                 "city": None,
-                "isp": None
+                "isp": None,
+                "lat": None,
+                "lon": None
             }
 
         return {
             "country": data.get("country"),
             "city": data.get("city"),
-            "isp": data.get("isp")
+            "isp": data.get("isp"),
+            "lat": data.get("lat"),
+            "lon": data.get("lon")
         }
 
     except Exception:
-        # In case API is down
         return {
             "country": None,
             "city": None,
-            "isp": None
+            "isp": None,
+            "lat": None,
+            "lon": None
         }

@@ -27,5 +27,152 @@
             "Login at unusual hours"
         ],
         "timestamp": "2025-11-17 00:47:54.779183"
+    },
+    {
+        "user": "dipanwita",
+        "ip": "172.16.95.252",
+        "risk_score": 20,
+        "reasons": [
+            "First-time login from any location"
+        ],
+        "timestamp": "2025-11-18 11:57:21.096265"
+    },
+    {
+        "user": "testuser",
+        "ip": "172.16.95.252",
+        "risk_score": 15,
+        "reasons": [
+            "New IP address"
+        ],
+        "timestamp": "2025-11-18 11:59:06.227408"
+    },
+    {
+        "user": "dipanwita",
+        "ip": "75.108.161.139",
+        "risk_score": 90,
+        "reasons": [
+            "New IP address",
+            "Login from new city",
+            "Login from new country",
+            "Unusual ISP detected (possible VPN)"
+        ],
+        "timestamp": "2025-11-18 12:05:26.868233"
+    },
+    {
+        "user": "testuser",
+        "ip": "75.108.161.139",
+        "risk_score": 30,
+        "reasons": [
+            "New IP address",
+            "Unusual ISP detected (possible VPN)"
+        ],
+        "timestamp": "2025-11-18 12:06:37.329439"
+    },
+    {
+        "user": "dipanwita",
+        "ip": "75.108.161.139",
+        "risk_score": 90,
+        "reasons": [
+            "New IP address",
+            "Login from new city",
+            "Login from new country",
+            "Unusual ISP detected (possible VPN)"
+        ],
+        "timestamp": "2025-11-18 12:11:10.019793"
+    },
+    {
+        "user": "testuser",
+        "ip": "75.108.161.139",
+        "risk_score": 0,
+        "reasons": [],
+        "timestamp": "2025-11-18 12:13:19.669704"
+    },
+    {
+        "user": "testuser",
+        "ip": "75.108.161.139",
+        "risk_score": 0,
+        "reasons": [],
+        "timestamp": "2025-11-18 12:14:48.239724"
+    },
+    {
+        "user": "dipanwita",
+        "ip": "75.108.161.139",
+        "risk_score": 90,
+        "reasons": [
+            "New IP address",
+            "Login from new city",
+            "Login from new country",
+            "Unusual ISP detected (possible VPN)"
+        ],
+        "timestamp": "2025-11-18 12:15:37.042784"
+    },
+    {
+        "user": "dipanwita",
+        "ip": "75.108.161.139",
+        "risk_score": 90,
+        "reasons": [
+            "New IP address",
+            "Login from new city",
+            "Login from new country",
+            "Unusual ISP detected (possible VPN)"
+        ],
+        "timestamp": "2025-11-18 12:15:51.641973"
+    },
+    {
+        "user": "testuser",
+        "ip": "75.108.161.139",
+        "risk_score": 0,
+        "reasons": [],
+        "timestamp": "2025-11-18 15:20:20.361678",
+        "country": "United States",
+        "city": "College Station",
+        "isp": "Suddenlink Communications",
+        "lat": 30.6032,
+        "lon": -96.3136
+    },
+    {
+        "user": "dipanwita",
+        "ip": "75.108.161.139",
+        "risk_score": 90,
+        "reasons": [
+            "New IP address",
+            "Login from new city",
+            "Login from new country",
+            "Unusual ISP detected (possible VPN)"
+        ],
+        "timestamp": "2025-11-18 15:20:44.760087",
+        "country": "United States",
+        "city": "College Station",
+        "isp": "Suddenlink Communications",
+        "lat": 30.6032,
+        "lon": -96.3136
+    },
+    {
+        "user": "admin",
+        "ip": "75.108.161.139",
+        "risk_score": 20,
+        "reasons": [
+            "First-time login from any location"
+        ],
+        "timestamp": "2025-11-18 15:24:04.574533",
+        "country": "United States",
+        "city": "College Station",
+        "isp": "Suddenlink Communications",
+        "lat": 30.6032,
+        "lon": -96.3136
+    },
+    {
+        "user": "arun",
+        "ip": "75.108.161.139",
+        "risk_score": 20,
+        "reasons": [
+            "First-time login from any location"
+        ],
+        "timestamp": "2025-11-18 15:24:28.028112",
+        "country": "United States",
+        "city": "College Station",
+        "isp": "Suddenlink Communications",
+        "lat": 30.6032,
+        "lon": -96.3136
     }
 ]
