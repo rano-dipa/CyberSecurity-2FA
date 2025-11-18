@@ -1,5 +1,10 @@
 {
     "testuser": [
-        "172.18.91.252"
+        {
+            "ip": "172.20.1.54",
+            "country": "United States",
+            "city": "College Station",
+            "isp": "Xfinity"
+        }
     ]
 }

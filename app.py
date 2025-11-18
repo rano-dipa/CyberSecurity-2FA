@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, send_file, redirect, url_for, flash
 from risk_engine import calculate_risk
+from geo import get_geo
 import qrcode
 import io
 import json
@@ -203,6 +204,7 @@ def check_status(token):
 @app.route('/approve/<token>')
 def approve(token):
     sessions = load_sessions()
+
     if token not in sessions:
         return "Invalid or expired session."
 
@@ -213,12 +215,27 @@ def approve(token):
     sessions[token]["verified"] = True
     save_sessions(sessions)
 
-    # After verifying → trust this new IP
+    # --------------------------
+    # SAVE GEOLOCATION HERE
+    # --------------------------
+    geo = get_geo(user_ip)
+
     known_locations = load_known_locations()
+
     if username not in known_locations:
         known_locations[username] = []
-    if user_ip not in known_locations[username]:
-        known_locations[username].append(user_ip)
+
+    # Avoid duplicates
+    already_exists = any(loc["ip"] == user_ip for loc in known_locations[username])
+
+    if not already_exists:
+        known_locations[username].append({
+            "ip": user_ip,
+            "country": geo["country"],
+            "city": geo["city"],
+            "isp": geo["isp"]
+        })
+
     save_known_locations(known_locations)
 
     return render_template("approve.html", user=username)
