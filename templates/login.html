@@ -4,43 +4,79 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            width: 320px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-        }
-        input, button {
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-        }
-        button {
-            background: #007BFF;
-            color: white;
-            border: none;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .flash {
-            color: red;
-            text-align: center;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        background: white;
+        padding: 30px;
+        width: 350px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #2979FF;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        margin-top: 5px;
+    }
+
+    button:hover {
+        background: #1c54b2;
+    }
+
+    .flash {
+        color: red;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #2979FF;
+    }
+
+    p {
+        margin-top: 10px;
+        text-align: left;
+    }
     </style>
+
 </head>
 <body>
 <div class="container">
