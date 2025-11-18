@@ -1,4 +1,6 @@
 import datetime
+from geo import get_geo
+
 
 # Fake list of suspicious IPs
 BAD_IPS = {"123.45.67.89", "66.66.66.66"}
