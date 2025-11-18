@@ -1,0 +1,17 @@
+{
+    "5d51afb5695ac55f28c27a9f7a5a57b6": {
+        "username": "testuser",
+        "verified": false,
+        "ip": "127.0.0.1"
+    },
+    "b1330aa565e9859a4d1672b23dde93f8": {
+        "username": "testuser",
+        "verified": false,
+        "ip": "172.18.91.252"
+    },
+    "a7a9f5705af3e2868bea8beda6d5e50b": {
+        "username": "testuser",
+        "verified": true,
+        "ip": "172.18.91.252"
+    }
+}
