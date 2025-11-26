@@ -122,6 +122,8 @@ def cleanup_expired_sessions():
         save_sessions(sessions)
 
 
+    
+    
 @app.route('/')
 def home():
     token = session.get('token')
@@ -233,11 +235,17 @@ def login():
     session['token'] = token
     session['username'] = username
 
-    # If admin logs in, redirect to admin dashboard directly (no QR)
     if username == 'admin':
-        sessions[token]['verified'] = True
-        save_sessions(sessions)
-        return redirect(url_for('admin_dashboard'))
+        sessions[token]['verified'] = True   # Mark admin as verified immediately
+
+    save_sessions(sessions)
+    session['token'] = token
+    session['username'] = username
+
+    if username == 'admin':
+        return redirect(url_for('dashboard', token=token))
+
+
 
     # Create QR code URL
     qr_url = request.host_url + "approve/" + token
@@ -274,7 +282,7 @@ def admin_dashboard():
     if show_admin_values:
         show_admin = show_admin_values[-1].lower() == 'true'
     else:
-        show_admin = True  # default
+        show_admin = False  # default
 
     logs = load_audit()
 

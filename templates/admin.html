@@ -67,6 +67,17 @@
 </form>
 
 
+<div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center; margin-bottom: 20px;">
+
+  <!-- Back to Dashboard button -->
+  <form action="{{ url_for('dashboard', token=session.get('token')) }}" method="get" style="margin: 0;">
+    <button type="submit" class="btn btn-secondary">Back to Dashboard</button>
+  </form>
+
+</div>
+
+
+
     <form action="/logout" method="POST" style="float:right;">
       <button type="submit" class="btn-logout">Logout</button>
     </form>
