@@ -1,75 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Verify Login</title>
-    <style>
+  <title>Verify Login</title>
+  <style>
     body {
-        text-align: center;
-        font-family: Arial, sans-serif;
-        background: #fafafa;
-        margin: 0;
-        padding-top: 40px;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;      /* CENTER EVERYTHING */
+      background: #f8f9fa;
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      text-align: center;
+      padding-top: 60px;
     }
-
+    .container {
+      max-width: 320px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
     h2 {
-        margin-bottom: 10px;
+      color: #333;
     }
-
-    #qr-box {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 0 12px rgba(0,0,0,0.12);
-
-        display: flex;
-        justify-content: center;   /* CENTER QR INSIDE BOX */
-        align-items: center;       /* VERTICAL CENTER */
-        width: 320px;              /* MATCHING QR SIZE */
-        height: auto;
-        margin-top: 20px;
-    }
-
     img {
-        width: 260px;
-        height: 260px;
+      margin: 20px 0;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
     }
-
-    .waiting {
-        margin-top: 18px;
-        font-size: 14px;
-        color: #555;
+    .message {
+      font-size: 16px;
+      margin: 20px 0;
+      color: #555;
     }
-    </style>
-
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Scan QR to Verify</h2>
 
-<h2>Additional Verification Required</h2>
-<p>Scan this QR code with your mobile device to approve the login.</p>
-
-<div id="qr-box">
     <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
-</div>
 
-<p>Waiting for approval...</p>
+    <p class="message">Please scan the QR code with your mobile device to approve login.</p>
 
-<script>
-    function checkStatus() {
-        fetch(`/check_status/{{ token }}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "verified") {
-                    window.location.href = "/dashboard/{{ token }}";
-                }
-            });
-    }
+    <script>
+      // Auto-check status every 3 seconds
+      async function checkStatus() {
+        const response = await fetch('/check_status/{{ token }}');
+        const data = await response.json();
 
-    setInterval(checkStatus, 3000);
-</script>
+        if (data.status === 'verified') {
+          window.location.href = data.redirect;
+        }
+      }
 
+      setInterval(checkStatus, 3000);
+    </script>
+  </div>
 </body>
 </html>

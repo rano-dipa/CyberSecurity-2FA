@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash
+from flask import Flask, render_template, request, send_file, redirect, url_for, flash, session
 from risk_engine import calculate_risk
 from geo import get_geo
 import qrcode
@@ -9,6 +9,8 @@ import secrets
 import datetime
 import base64
 import requests
+import time
+
 
 KNOWN_LOC_FILE = 'known_locations.json'
 SESSION_FILE = 'session_store.json'
@@ -16,7 +18,7 @@ AUDIT_FILE = "audit_log.json"
 FAILED_ATTEMPTS_FILE = "failed_attempts.json"
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # required for flash messages
+app.secret_key = 'supersecretkey'  # required for flash messages and sessions
 
 USERS_FILE = 'users.json'
 
@@ -99,11 +101,36 @@ def add_audit_entry(username, ip, score, reasons):
         "lat": geo.get("lat"),
         "lon": geo.get("lon")
     })
+    # Sort audit logs descending by timestamp
+    logs.sort(key=lambda x: x['timestamp'], reverse=True)
     save_audit(logs)
+
+def cleanup_expired_sessions():
+    sessions = load_sessions()
+    now = time.time()
+    changed = False
+
+    for token, data in list(sessions.items()):
+        # Default expiry 60 seconds if not set
+        expires_in = data.get("expires_in", 60)
+        created = data.get("created", now)
+        if now - created > expires_in:
+            del sessions[token]
+            changed = True
+
+    if changed:
+        save_sessions(sessions)
 
 
 @app.route('/')
 def home():
+    token = session.get('token')
+    if token:
+        # If admin logged in
+        if session.get('username') == 'admin':
+            return redirect(url_for('admin_dashboard'))
+        # If normal user logged in
+        return redirect(url_for('dashboard', token=token))
     return render_template('login.html')
 
 
@@ -116,7 +143,14 @@ def signup():
         users = load_users()
         if username in users:
             flash('Username already exists. Please log in instead.')
-            return redirect(url_for('home'))
+            return render_template('signup.html')
+
+        # Password policy check: uppercase, lowercase, number, symbol
+        import re
+        if not (re.search(r'[A-Z]', password) and re.search(r'[a-z]', password)
+                and re.search(r'[0-9]', password) and re.search(r'[\W_]', password)):
+            flash('Password must contain uppercase, lowercase, number, and symbol.')
+            return render_template('signup.html')
 
         users[username] = password
         save_users(users)
@@ -129,6 +163,7 @@ def signup():
 
 @app.route('/login', methods=['POST'])
 def login():
+    cleanup_expired_sessions()
     username = request.form.get('username')
     password = request.form.get('password')
     ip_address = get_public_ip() or request.remote_addr
@@ -146,7 +181,7 @@ def login():
         attempts[username] += 1
         save_attempts(attempts)
         flash("Invalid username or password")
-        return redirect(url_for('home'))
+        return render_template('login.html', username=username)
 
     # Reset attempts after successful password check
     attempts[username] = 0
@@ -172,7 +207,7 @@ def login():
     # Decide risk action
     if risk_score >= 70:
         flash("HIGH RISK LOGIN BLOCKED! Contact admin.")
-        return redirect(url_for('home'))
+        return render_template('login.html', username=username)
 
     # If medium risk → require QR approval
     if risk_score >= 30:
@@ -188,9 +223,21 @@ def login():
     sessions[token] = {
         "username": username,
         "verified": False,
-        "ip": ip_address
+        "ip": ip_address,
+        "created": time.time(),
+        "expires_in": 60
     }
     save_sessions(sessions)
+
+    # Store token and username in Flask session
+    session['token'] = token
+    session['username'] = username
+
+    # If admin logs in, redirect to admin dashboard directly (no QR)
+    if username == 'admin':
+        sessions[token]['verified'] = True
+        save_sessions(sessions)
+        return redirect(url_for('admin_dashboard'))
 
     # Create QR code URL
     qr_url = request.host_url + "approve/" + token
@@ -207,18 +254,40 @@ def login():
 
 @app.route('/check_status/<token>')
 def check_status(token):
+    cleanup_expired_sessions()
     sessions = load_sessions()
     if token in sessions and sessions[token]["verified"]:
-        return {"status": "verified"}
+        return {
+            "status": "verified",
+            "redirect": url_for("dashboard", token=token)
+        }
     return {"status": "pending"}
+
 
 @app.route('/admin')
 def admin_dashboard():
-    logs = load_audit()   # use your existing audit loading function
-    return render_template("admin.html", logs=logs)
+    if session.get('username') != 'admin':
+        flash("Access denied.")
+        return redirect(url_for('home'))
+
+    show_admin_values = request.args.getlist('show_admin')
+    if show_admin_values:
+        show_admin = show_admin_values[-1].lower() == 'true'
+    else:
+        show_admin = True  # default
+
+    logs = load_audit()
+
+    if not show_admin:
+        # Filter out admin user logs
+        logs = [log for log in logs if log.get('user') != 'admin']
+
+    return render_template("admin.html", logs=logs, show_admin=show_admin)
+
 
 @app.route('/approve/<token>')
 def approve(token):
+    cleanup_expired_sessions()
     sessions = load_sessions()
 
     if token not in sessions:
@@ -259,6 +328,7 @@ def approve(token):
 
     return render_template("approve.html", user=username)
 
+
 @app.route('/dashboard/<token>')
 def dashboard(token):
     sessions = load_sessions()
@@ -267,6 +337,26 @@ def dashboard(token):
     return "Unauthorized"
 
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    flash("You have been logged out.")
+    return redirect(url_for('home'))
+
+
+
+@app.route('/api/mobile/verify', methods=['POST'])
+def mobile_verify():
+    token = request.json.get("token")
+
+    sessions = load_sessions()
+    if token not in sessions:
+        return {"status": "invalid"}, 400
+
+    sessions[token]["verified"] = True
+    save_sessions(sessions)
+    return {"status": "verified"}
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
-
