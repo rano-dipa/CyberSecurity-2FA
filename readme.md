@@ -111,3 +111,13 @@ A small list of flagged IPs is penalized heavily.
 - High risk → login blocked and logged  
 
 This demonstrates an adaptive authentication flow that adjusts access decisions based on contextual and behavioral risk signals.
+
+## Testing the QR Flow on a Phone 
+
+When testing the QR-based approval workflow, ensure that the phone can reach the Flask server over the local network. Use your laptop’s LAN IP address in the QR URL; `127.0.0.1` will not work on a phone. Both devices must be on the same Wi-Fi network. If the phone cannot load the approval page, check whether Windows Defender or another firewall is blocking inbound connections and allow `python.exe` on private networks. If the QR image appears blank, verify that `verify.html` correctly receives and renders the Base64-encoded `qr_image` string generated in `app.py`.
+
+## Conclusion
+
+This project demonstrates a practical implementation of adaptive authentication by combining location awareness, device analysis, user behavior, and real-time risk scoring. The system highlights how modern security models can move beyond static passwords to incorporate contextual signals that strengthen account protection while maintaining usability. The modular structure—separating risk evaluation, geolocation, session tracking, and user interaction—makes the project extensible for future enhancements such as MFA integration, anomaly detection models, or enterprise-grade logging. This serves as a foundational prototype for understanding and experimenting with real-world authentication hardening techniques.
+
+
