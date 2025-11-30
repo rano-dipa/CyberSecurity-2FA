@@ -23,6 +23,15 @@
             "lat": 30.6032,
             "lon": -96.3136,
             "timestamp": "2025-11-18 12:06:56.576192"
+        },
+        {
+            "ip": "173.219.167.173",
+            "country": "United States",
+            "city": "Bryan",
+            "isp": "Suddenlink Communications",
+            "lat": 30.6386,
+            "lon": -96.3658,
+            "timestamp": "2025-11-19 11:28:10.715823"
         }
     ],
     "dipanwita": [

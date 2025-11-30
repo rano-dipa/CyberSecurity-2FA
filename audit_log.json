@@ -174,5 +174,20 @@
         "isp": "Suddenlink Communications",
         "lat": 30.6032,
         "lon": -96.3136
+    },
+    {
+        "user": "testuser",
+        "ip": "173.219.167.173",
+        "risk_score": 35,
+        "reasons": [
+            "New IP address",
+            "Login from new city"
+        ],
+        "timestamp": "2025-11-19 11:27:29.549162",
+        "country": "United States",
+        "city": "Bryan",
+        "isp": "Suddenlink Communications",
+        "lat": 30.6386,
+        "lon": -96.3658
     }
 ]
