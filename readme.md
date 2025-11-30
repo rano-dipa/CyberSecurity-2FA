@@ -1,56 +1,112 @@
-# Enhanced Two-Factor Authentication with Location and QR-Based Verification
+# Cybersecurity Login System (Risk-Adaptive Authentication)
 
-## Project Overview
-Traditional Two-Factor Authentication (2FA) systems strengthen password-based security but still face vulnerabilities such as phishing attacks, SIM swapping, and unauthorized access from unfamiliar locations or devices.  
-This project proposes an Enhanced 2FA System that adds context-aware verification and QR-based confirmation to improve both security and usability.
+This project implements a security-oriented web application featuring risk-based authentication, geolocation checks, session monitoring, and administrative oversight. It is built using Flask and uses JSON files for data storage, keeping the system simple and portable.
 
----
-
-## Key Features
-1. **Location-Aware Authentication**  
-   - The system verifies the user’s login location (via IP address or Wi-Fi SSID).  
-   - If the login originates from an unfamiliar or suspicious location, an additional verification step is triggered.  
-   - This introduces adaptive, context-based security.
-
-2. **QR Code Confirmation**  
-   - When logging in from a desktop or web interface, a unique QR code is generated.  
-   - The user scans this QR code using their registered mobile device to confirm the login attempt.  
-   - Ensures that only the trusted device holder can approve access, reducing phishing risk.
+Project Members:  
+- Dipanwita Rano  
+- Arun Akash Rangraj  
+- Rushil Ravi  
 
 ---
 
-## Project Goals
-- Strengthen authentication by integrating environmental context (location).  
-- Prevent unauthorized access from unfamiliar networks or devices.  
-- Streamline verification using a fast and intuitive QR scan method.  
-- Demonstrate a lightweight and practical security prototype.
+## Features
+- User sign-up, login, and verification
+- Risk Engine analyzing:
+  - Geolocation and ISP data
+  - New or unfamiliar IPs and locations
+  - Impossible travel patterns
+  - Device characteristics
+  - Failed login attempts
+  - Suspicious / flagged IPs
+- Admin dashboard for logs, users, and risk assessment
+- JSON-based lightweight storage
 
 ---
 
-## Current Progress
-- Flask backend initialized with a `/login` route and IP address logging.  
-- Basic web frontend created for login and QR display.  
-- Static QR code generation implemented using Python’s `qrcode` library.  
-- GitHub repository and documentation setup for collaborative development.
+## Project Structure
+```
+Cybersec/
+│
+├── app.py
+├── risk_engine.py
+├── geo.py
+│
+├── templates/
+│   ├── login.html
+│   ├── signup.html
+│   ├── verify.html
+│   ├── dashboard.html
+│   ├── approve.html
+│   ├── admin.html
+│
+├── audit_log.json
+├── failed_attempts.json
+├── known_locations.json
+├── session_store.json
+├── users.json
+│
+└── static/
+```
 
 ---
 
-## Tech Stack
-- **Backend:** Python (Flask)  
-- **Frontend:** HTML, CSS, JavaScript  
-- **Libraries:** `flask`, `qrcode`, `requests`, `geocoder` (for future location handling)
+## Requirements
+```
+Python 3.10+
+Flask
+requests
+```
+
+Install:
+```
+pip install flask requests
+```
 
 ---
 
-## Team Members and Roles
-- **Dipanwita Rano** – Documentation and Frontend Development  
-- **Arun Akash Rangaraj** – Backend and Location Verification  
-- **Rushil Ravi** – Mobile Development and QR Verification System  
+## How to Run
+```
+python app.py
+```
+
+Open in browser:
+```
+http://127.0.0.1:5000
+```
 
 ---
 
-## Next Steps
-- Implement dynamic QR generation linked to user sessions.  
-- Build a mobile interface for scanning and verifying QR codes.  
-- Add real-time location-based risk assessment.  
-- Integrate all components for end-to-end authentication testing.
+## How the Risk Engine Works
+
+### 1. Geolocation
+`get_geo(ip)` retrieves country, city, ISP, latitude, longitude. These are compared to prior logins stored in `known_locations.json`.
+
+### 2. New/Unusual Login Indicators
+Risk increases if login comes from:
+- new IP  
+- new city  
+- new country  
+- new ISP  
+
+### 3. Impossible Travel
+Uses haversine distance between last login and current login.  
+If required travel speed exceeds ~900 km/h, it is flagged.
+
+### 4. Time-Based Risk
+Logins at unusual hours (before 6 AM or after 11 PM) add risk.
+
+### 5. Device/User-Agent Risk
+Detects irregular device/browser patterns.
+
+### 6. Failed Attempt Accumulation
+Repeated failed attempts increase risk sharply.
+
+### 7. Malicious IP Check
+A small list of flagged IPs is penalized heavily.
+
+### Outcome
+- Low risk → login allowed  
+- Medium risk → requires confirmation  
+- High risk → login blocked and logged  
+
+This demonstrates an adaptive authentication flow that adjusts access decisions based on contextual and behavioral risk signals.
