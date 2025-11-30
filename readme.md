@@ -55,11 +55,12 @@ Cybersec/
 Python 3.10+
 Flask
 requests
+qrcode
 ```
 
 Install:
 ```
-pip install flask requests
+pip install flask requests qrcode
 ```
 
 ---
