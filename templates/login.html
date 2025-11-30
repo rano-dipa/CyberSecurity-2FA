@@ -1,105 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <style>
+  <title>Login</title>
+  <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
+      background: #f8f9fa;
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
     }
-
     .container {
-        background: white;
-        padding: 30px;
-        width: 350px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-
     h2 {
-        margin-top: 0;
-        margin-bottom: 20px;
-        text-align: left;
+      text-align: center;
+      color: #333;
     }
-
     label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 14px;
+      display: block;
+      margin: 12px 0 6px;
+      color: #555;
     }
-
-    input {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 15px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 14px;
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 8px 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
-
     button {
-        width: 100%;
-        padding: 12px;
-        background: #2979FF;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 15px;
-        margin-top: 5px;
+      width: 100%;
+      background: #4c6ef5;
+      color: white;
+      border: none;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
     }
-
     button:hover {
-        background: #1c54b2;
+      background: #3b5bdb;
     }
-
-    .flash {
-        color: red;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    a {
-        text-decoration: none;
-        color: #2979FF;
-    }
-
     p {
-        margin-top: 10px;
-        text-align: left;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
     }
-    </style>
-
+    a {
+      color: #4c6ef5;
+      text-decoration: none;
+    }
+    .alert {
+      background: #f8d7da;
+      color: #842029;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-
+  <div class="container">
     <h2>Login</h2>
 
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="flash">{{ messages[0] }}</div>
-        {% endif %}
+      {% if messages %}
+        <div class="alert">
+          {% for message in messages %}
+            <div>{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
     {% endwith %}
 
-    <form action="/login" method="POST">
-        <label>Username:</label>
-        <input type="text" name="username" required>
+    <form method="POST" action="/login">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" required value="{{ request.form.username or '' }}">
 
-        <label>Password:</label>
-        <input type="password" name="password" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required>
 
-        <button type="submit">Login</button>
+      <button type="submit">Login</button>
     </form>
 
-    <p>New user? <a href="/signup">Sign up</a></p>
-</div>
+    <p>Don't have an account? <a href="/signup">Sign up here</a></p>
+  </div>
 </body>
 </html>

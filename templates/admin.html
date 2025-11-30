@@ -1,114 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin – Login Location Dashboard</title>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <style>
+  <title>Admin Audit Logs</title>
+  <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f3f3f3;
-        margin: 0;
-        padding: 30px;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* CENTER EVERYTHING */
+      background: #f8f9fa;
+      font-family: "Segoe UI", sans-serif;
+      min-height: 100vh;        /* Full viewport height */
+      margin: 0;
+      padding: 20px;            /* padding around content */
     }
-
+    .container {
+      background: #fff;         /* white background for the card */
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+      max-width: 1200px;
+      margin: auto;             /* center container */
+    }
     h2 {
-        margin-bottom: 20px;
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
     }
-
-    #map {
-        height: 550px;
-        width: 80%;               /* reduce from 90% for better balance */
-        max-width: 1200px;        /* prevents too wide on large monitors */
-        border-radius: 12px;
-        box-shadow: 0 0 12px rgba(0,0,0,0.15);
-        margin-top: 15px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
     }
-
-    .legend {
-        padding: 10px;
-        background: white;
-        border-radius: 8px;
-        line-height: 1.5;
-
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        z-index: 1000; /* ensure it stays above map */
-        box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
     }
-
-    .green { color: green; }
-    .blue { color: blue; }
-    .yellow { color: orange; }
-    .red { color: red; }
-    </style>    
-
+    th {
+      background: #4c6ef5;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .btn-logout {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 20px;
+      float: right;
+    }
+    .btn-logout:hover {
+      background: #bb2d3b;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+	<form method="get" action="{{ url_for('admin_dashboard') }}">
+  <input type="hidden" name="show_admin" value="false">
+  <label>
+    <input type="checkbox" name="show_admin" value="true" onchange="this.form.submit()" {% if show_admin %}checked{% endif %}>
+    Show Admin Logs
+  </label>
+</form>
 
-<h2>Login Location Dashboard</h2>
 
-<div class="legend">
-    <b>Risk Levels:</b><br/>
-    <span class="green">● Low (0–20)</span><br/>
-    <span class="blue">● Medium (20–60)</span><br/>
-    <span class="yellow">● High (60–100)</span><br/>
-    <span class="red">● Severe (100+)</span>
+<div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center; margin-bottom: 20px;">
+
+  <!-- Back to Dashboard button -->
+  <form action="{{ url_for('dashboard', token=session.get('token')) }}" method="get" style="margin: 0;">
+    <button type="submit" class="btn btn-secondary">Back to Dashboard</button>
+  </form>
+
 </div>
 
-<div id="map"></div>
 
-<script>
-    // initialize map
-    const map = L.map('map').setView([20, 0], 2);
 
-    // base layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
-
-    // logs passed from Flask
-    const logs = {{ logs | tojson}};
-
-    // helper to choose color based on risk score
-    function riskColor(score) {
-        if (score < 20) return "green";
-        if (score < 60) return "blue";
-        if (score < 100) return "orange";
-        return "red";
-    }
-
-    // add markers
-    logs.forEach(log => {
-        if (!log.lat || !log.lon) return;  // skip entries without geolocation
-
-        const marker = L.circleMarker([log.lat, log.lon], {
-            radius: 8,
-            color: riskColor(log.risk_score),
-            fillColor: riskColor(log.risk_score),
-            fillOpacity: 0.9
-        }).addTo(map);
-
-        marker.bindPopup(`
-            <b>User:</b> ${log.user}<br/>
-            <b>IP:</b> ${log.ip}<br/>
-            <b>Country:</b> ${log.country || "Unknown"}<br/>
-            <b>City:</b> ${log.city || "Unknown"}<br/>
-            <b>ISP:</b> ${log.isp || "Unknown"}<br/>
-            <b>Risk Score:</b> ${log.risk_score}<br/>
-            <b>Reasons:</b><br/>
-            ${log.reasons.join("<br/>")}
-            <br/><b>Time:</b> ${log.timestamp}
-        `);
-    });
-</script>
-
+    <form action="/logout" method="POST" style="float:right;">
+      <button type="submit" class="btn-logout">Logout</button>
+    </form>
+    <h2>Audit Logs</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>IP</th>
+          <th>Risk Score</th>
+          <th>Reasons</th>
+          <th>Timestamp</th>
+          <th>Country</th>
+          <th>City</th>
+          <th>ISP</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.user }}</td>
+          <td>{{ log.ip }}</td>
+          <td>{{ log.risk_score }}</td>
+          <td>{{ log.reasons | join(', ') if log.reasons else '' }}</td>
+          <td>{{ log.timestamp }}</td>
+          <td>{{ log.country }}</td>
+          <td>{{ log.city }}</td>
+          <td>{{ log.isp }}</td>
+          <td>{{ log.lat }}</td>
+          <td>{{ log.lon }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>

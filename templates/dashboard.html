@@ -1,38 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #eef2f3;
-            padding: 50px;
-            text-align: center;
-        }
-        .box {
-            background: white;
-            padding: 30px;
-            margin: auto;
-            width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-        }
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            color: #007BFF;
-            text-decoration: none;
-        }
-    </style>
+  <title>Dashboard</title>
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .btn-logout {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 25px;
+    }
+    .btn-logout:hover {
+      background: #bb2d3b;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Welcome, {{ user }}</h2>
+    <p>You have successfully logged in.</p>
 
-<div class="box">
-    <h2>Login Successful</h2>
-    <p>Welcome, {{ user }}!</p>
+	{% if user == 'admin' %}
+  <div style="text-align:right; margin-bottom:20px;">
+    <a href="{{ url_for('admin_dashboard') }}" 
+       style="padding:10px 20px; background:#4c6ef5; color:white; 
+              border-radius:6px; text-decoration:none; font-weight:bold;">
+      View Audit Logs
+    </a>
+  </div>
+{% endif %}
 
-    <a href="/">Logout</a>
-</div>
 
+
+
+    <form action="/logout" method="POST">
+      <button type="submit" class="btn-logout">Logout</button>
+    </form>
+  </div>
 </body>
 </html>

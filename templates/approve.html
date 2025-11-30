@@ -1,31 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Approved</title>
-    <style>
-        body {
-            background: #f0fff0;
-            text-align: center;
-            padding-top: 100px;
-            font-family: Arial;
-        }
-        .box {
-            background: white;
-            width: 350px;
-            padding: 25px;
-            margin: auto;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        }
-    </style>
+  <title>Approval Successful</title>
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      text-align: center;
+      padding-top: 80px;
+    }
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #28a745;
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 16px;
+      color: #555;
+    }
+    a {
+      display: inline-block;
+      margin-top: 25px;
+      color: #4c6ef5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-
-<div class="box">
-    <h2>Login Approved</h2>
-    <p>User <strong>{{ user }}</strong> has confirmed the login.</p>
-    <p>You can close this window now.</p>
-</div>
-
+  <div class="container">
+    <h2>Approval Successful</h2>
+    <p>User <strong>{{ user }}</strong> has approved the login.</p>
+    <a href="/">Back to Login</a>
+  </div>
 </body>
 </html>
